@@ -131,8 +131,8 @@ export default function Calculator() {
     const colors = ['#f59e0b','#3b82f6','#10b981','#8b5cf6','#ec4899']
     return (
       <div className="pt-16 min-h-screen dashboard-bg">
-        <div className="max-w-4xl mx-auto px-4 py-10">
-          <motion.div initial={{opacity:0,scale:.95}} animate={{opacity:1,scale:1}} className="space-y-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+          <motion.div initial={{opacity:0,scale:.95}} animate={{opacity:1,scale:1}} className="space-y-6 sm:space-y-8">
             <div className="glass rounded-2xl p-8 text-center relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/30 to-transparent"/>
               <div className="relative">
@@ -146,15 +146,15 @@ export default function Calculator() {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="glass rounded-2xl p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              <div className="glass rounded-2xl p-6 sm:p-8">
                 <h3 className="text-white font-bold mb-4">Emission Breakdown</h3>
                 <div className="h-48">
                   <Doughnut data={{ labels:catLabels.map(l=>l.replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase())), datasets:[{data:catValues,backgroundColor:colors.map(c=>`${c}cc`),borderWidth:2}] }}
                     options={{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9ca3af',boxWidth:10,font:{size:10}}}}}}/>
                 </div>
               </div>
-              <div className="glass rounded-2xl p-6">
+              <div className="glass rounded-2xl p-6 sm:p-8">
                 <h3 className="text-white font-bold mb-4">vs Global Averages</h3>
                 <div className="h-48">
                   <Bar data={{labels:['You','Global Avg','US Avg'],datasets:[{data:[result.total_co2_kg_per_year,4700,15000],backgroundColor:['rgba(16,185,129,.6)','rgba(251,191,36,.6)','rgba(239,68,68,.6)'],borderColor:['#10b981','#fbbf24','#ef4444'],borderWidth:2,borderRadius:6}]}}
@@ -162,7 +162,7 @@ export default function Calculator() {
                 </div>
               </div>
             </div>
-            <div className="glass rounded-2xl p-6">
+            <div className="glass rounded-2xl p-6 sm:p-8">
               <h3 className="text-white font-bold mb-4 flex items-center gap-2"><Zap className="w-5 h-5 text-emerald-400"/>AI Recommendations</h3>
               <div className="space-y-3">
                 {result.recommendations.map((r,i)=>(
@@ -173,8 +173,8 @@ export default function Calculator() {
                 ))}
               </div>
             </div>
-            <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-emerald-500/20">
-              <div className="text-3xl">💚</div>
+            <div className="glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 border border-emerald-500/20">
+              <div className="text-4xl">💚</div>
               <div>
                 <p className="text-white font-bold">Potential Annual Savings</p>
                 <p className="text-gray-400 text-sm">With moderate changes, save up to <span className="text-emerald-400 font-bold">{formatCO2(result.potential_savings_kg)}</span> CO₂/year.</p>
@@ -191,9 +191,9 @@ export default function Calculator() {
 
   const StepIcon = STEP_ICONS[step]
   return (
-    <div className="pt-16 min-h-screen dashboard-bg">
-      <div className="max-w-2xl mx-auto px-4 py-10">
-        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
+    <div className="pt-16 min-h-screen dashboard-bg flex flex-col items-center justify-center">
+      <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="w-full">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-black text-white mb-2">Carbon Footprint Calculator</h1>
             <p className="text-gray-400 text-sm">5 sections to get your precise carbon score</p>
@@ -208,8 +208,8 @@ export default function Calculator() {
               </div>
             )})}
           </div>
-          <div className="glass rounded-2xl p-6 sm:p-8">
-            <div className="flex items-center gap-3 mb-6">
+          <div className="glass rounded-2xl p-6 sm:p-10 shadow-2xl border border-white/5">
+            <div className="flex items-center gap-4 mb-8">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
                 <StepIcon className="w-5 h-5 text-emerald-400"/>
               </div>
@@ -223,7 +223,7 @@ export default function Calculator() {
                 {renderStep()}
               </motion.div>
             </AnimatePresence>
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700/50">
+            <div className="flex items-center justify-between mt-10 pt-6 border-t border-gray-700/50">
               <button onClick={()=>setStep(s=>s-1)} disabled={step===0}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-700 text-gray-300 hover:border-gray-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm">
                 <ChevronLeft className="w-4 h-4"/>Back

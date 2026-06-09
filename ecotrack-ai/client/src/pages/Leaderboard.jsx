@@ -27,8 +27,8 @@ export default function Leaderboard() {
 
   return (
     <div className="pt-16 min-h-screen dashboard-bg">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="text-center mb-10">
           <h1 className="text-2xl font-black text-white mb-1 flex items-center justify-center gap-2"><Trophy className="w-6 h-6 text-yellow-400"/>Global Leaderboard</h1>
           <p className="text-gray-400 text-sm">Top eco warriors making real change</p>
         </div>
@@ -43,8 +43,8 @@ export default function Leaderboard() {
         </div>
 
         {data && (
-          <div className="glass rounded-2xl p-4 mb-6 border border-emerald-500/20 flex items-center gap-4">
-            <div className="text-2xl font-black text-emerald-400">#{data.current_user_rank}</div>
+          <div className="glass rounded-2xl p-6 mb-8 border border-emerald-500/20 flex items-center gap-4 sm:gap-6 shadow-xl">
+            <div className="text-3xl font-black text-emerald-400">#{data.current_user_rank}</div>
             <div className="flex-1">
               <p className="text-white font-bold text-sm">Your Global Rank</p>
               <p className="text-gray-400 text-xs">Out of {data.total_participants.toLocaleString()} participants</p>
@@ -79,10 +79,10 @@ export default function Leaderboard() {
         {loading ? (
           <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"/></div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {data?.entries.map((e,i)=>(
               <motion.div key={e.user_id} initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:i*.03}}
-                className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${e.is_current_user?'glass border-emerald-500/30 glow-emerald-sm':'glass border-transparent hover:border-gray-600/50'}`}>
+                className={`flex items-center gap-4 p-5 rounded-2xl border transition-all ${e.is_current_user?'glass border-emerald-500/30 glow-emerald-sm':'glass border-white/5 hover:border-gray-600/50'}`}>
                 <div className="w-8 text-center font-black" style={{color:i<3?RANK_COLORS[i]:'#6b7280'}}>
                   {i<3?RANK_ICONS[i]:`#${e.rank}`}
                 </div>

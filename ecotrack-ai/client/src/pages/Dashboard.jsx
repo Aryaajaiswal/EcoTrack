@@ -127,7 +127,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Key Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {[
             {
               title: 'Carbon Score',
@@ -162,7 +162,7 @@ export default function Dashboard() {
           ].map(s => (
             <motion.div key={s.title}
               initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:s.delay}}
-              whileHover={{y:-2}} className="glass rounded-2xl p-5 card-hover">
+              whileHover={{y:-2}} className="glass rounded-2xl p-6 card-hover">
               <div className="flex items-start justify-between mb-3">
                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">{s.title}</p>
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{backgroundColor:`${s.color}20`}}>
@@ -179,9 +179,9 @@ export default function Dashboard() {
         </div>
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.2}}
-            className="lg:col-span-2 glass rounded-2xl p-6">
+            className="lg:col-span-8 glass rounded-2xl p-6 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-white font-bold">Daily Emissions</h3>
@@ -196,16 +196,16 @@ export default function Dashboard() {
                 </Link>
               </div>
             </div>
-            <div className="h-48">
+            <div className="h-64 sm:h-72 mt-4 flex-1">
               <Bar data={dailyChart} options={chartOpts}/>
             </div>
           </motion.div>
 
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.25}}
-            className="glass rounded-2xl p-6">
+            className="lg:col-span-4 glass rounded-2xl p-6 flex flex-col">
             <h3 className="text-white font-bold mb-1">By Category</h3>
             <p className="text-gray-400 text-xs mb-4">Emission sources</p>
-            <div className="h-40">
+            <div className="h-64 sm:h-72 mt-4 flex-1 relative flex items-center justify-center">
               <Doughnut data={catChart} options={{
                 ...chartOpts,
                 plugins: {
@@ -221,10 +221,10 @@ export default function Dashboard() {
         </div>
 
         {/* Bottom Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Activity */}
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.3}}
-            className="lg:col-span-2 glass rounded-2xl p-6">
+            className="lg:col-span-8 glass rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-bold">Recent Activity</h3>
               <Link to="/calculator" className="text-emerald-400 text-xs flex items-center gap-1 hover:text-emerald-300 transition-colors">
@@ -263,10 +263,10 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Right Column */}
-          <div className="space-y-4">
+          <div className="lg:col-span-4 space-y-6">
             {/* Eco Level */}
             <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.35}}
-              className="glass rounded-2xl p-5">
+              className="glass rounded-2xl p-6">
               <h3 className="text-white font-bold mb-3">Eco Level</h3>
               <div className="flex items-center gap-3 mb-3">
                 <div className="text-3xl bounce-gentle">{ecoIcon}</div>
@@ -286,7 +286,7 @@ export default function Dashboard() {
 
             {/* Challenges */}
             <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.4}}
-              className="glass rounded-2xl p-5">
+              className="glass rounded-2xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-white font-bold">Active Challenges</h3>
                 <Link to="/challenges" className="text-emerald-400 text-xs hover:text-emerald-300 transition-colors">View all →</Link>
@@ -315,7 +315,7 @@ export default function Dashboard() {
 
             {/* Badges */}
             <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.45}}
-              className="glass rounded-2xl p-5">
+              className="glass rounded-2xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-white font-bold">Badges</h3>
                 <span className="text-gray-400 text-xs">{user?.badges?.length || 0} earned</span>

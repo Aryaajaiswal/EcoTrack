@@ -32,9 +32,9 @@ export default function Profile() {
 
   return (
     <div className="pt-16 min-h-screen dashboard-bg">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Header */}
-        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="glass rounded-2xl p-6 sm:p-8 mb-6 relative overflow-hidden">
+        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="glass rounded-2xl p-6 sm:p-8 mb-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/20 to-transparent"/>
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div className="relative">
@@ -112,9 +112,9 @@ export default function Profile() {
 
         {/* Stats */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {[{l:'XP Points',v:stats.xp?.toLocaleString(),I:Zap,c:'#f59e0b'},{l:'Eco Streak',v:`${stats.streak}d`,I:Flame,c:'#ef4444'},{l:'CO₂ Saved',v:formatCO2(stats.total_carbon_saved),I:TrendingDown,c:'#3b82f6'},{l:'Activities',v:stats.activity_count,I:Leaf,c:'#10b981'}].map((s,i)=>(
-              <motion.div key={s.l} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*.05}} className="glass rounded-2xl p-4">
+              <motion.div key={s.l} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*.05}} className="glass rounded-2xl p-6">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2" style={{backgroundColor:`${s.c}20`}}>
                   <s.I className="w-4 h-4" style={{color:s.c}}/>
                 </div>
@@ -126,10 +126,10 @@ export default function Profile() {
         )}
 
         {/* Badges */}
-        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:.2}} className="glass rounded-2xl p-6 mb-6">
-          <h2 className="text-white font-bold mb-4 flex items-center gap-2"><Award className="w-5 h-5 text-yellow-400"/>Badges Earned ({user?.badges?.length||0})</h2>
+        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:.2}} className="glass rounded-2xl p-6 sm:p-8 mb-8">
+          <h2 className="text-white font-bold mb-6 flex items-center gap-2"><Award className="w-5 h-5 text-yellow-400"/>Badges Earned ({user?.badges?.length||0})</h2>
           {user?.badges?.length>0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {user.badges.map(id=>{
                 const b=BADGE_DATA[id]; if(!b) return null
                 return (

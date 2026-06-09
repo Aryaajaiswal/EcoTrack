@@ -85,7 +85,7 @@ export default function Challenges() {
 
   return (
     <div className="pt-16 min-h-screen dashboard-bg">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-8">
           <h1 className="text-2xl font-black text-white mb-1 flex items-center gap-2">
@@ -96,7 +96,7 @@ export default function Challenges() {
         </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {[
             { label:'Available', value:stats.available, color:'text-gray-300', bg:'bg-gray-700/30' },
             { label:'Active', value:stats.active, color:'text-yellow-400', bg:'bg-yellow-500/10' },
@@ -112,7 +112,7 @@ export default function Challenges() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-3 mb-8">
           {filters.map(f => (
             <button key={f.v} onClick={() => setFilter(f.v)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
@@ -125,14 +125,14 @@ export default function Challenges() {
 
         {/* Challenge Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[...Array(6)].map((_,i) => <div key={i} className="skeleton h-52 rounded-2xl"/>)}
           </div>
         ) : (
           <AnimatePresence mode="wait">
             <motion.div key={filter}
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {filtered.map((c, i) => {
                 const dc = DC[c.difficulty]
                 const done = c.user_status === 'completed'
@@ -140,7 +140,7 @@ export default function Challenges() {
                 return (
                   <motion.div key={c.id}
                     initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*0.04}}
-                    className={`glass rounded-2xl p-5 flex flex-col gap-3 card-hover relative overflow-hidden ${done ? 'opacity-75' : ''}`}>
+                    className={`glass rounded-2xl p-6 flex flex-col gap-4 card-hover relative overflow-hidden ${done ? 'opacity-75' : ''}`}>
 
                     {/* Completed overlay glow */}
                     {done && (
@@ -186,7 +186,7 @@ export default function Challenges() {
                     )}
 
                     {/* Action button */}
-                    <div className="mt-auto">
+                    <div className="mt-auto pt-4">
                       {done ? (
                         <div className="text-center py-2 text-emerald-400 text-xs font-medium flex items-center justify-center gap-1">
                           <CheckCircle className="w-3.5 h-3.5"/>Challenge Completed!

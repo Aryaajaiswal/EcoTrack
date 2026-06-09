@@ -142,7 +142,7 @@ export default function Analytics() {
         </motion.div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {[
             {
               label: 'Annual Footprint',
@@ -170,7 +170,7 @@ export default function Analytics() {
             },
           ].map(s => (
             <motion.div key={s.label} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}
-              transition={{delay:s.delay}} className="glass rounded-2xl p-5 card-hover">
+              transition={{delay:s.delay}} className="glass rounded-2xl p-6 card-hover">
               <div className="flex items-start justify-between mb-2">
                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wide">{s.label}</p>
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{backgroundColor:`${s.color}20`}}>
@@ -184,9 +184,9 @@ export default function Analytics() {
         </div>
 
         {/* Prediction Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.2}}
-            className="lg:col-span-2 glass rounded-2xl p-6">
+            className="lg:col-span-8 glass rounded-2xl p-6 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-white font-bold">12-Month Emission Forecast</h3>
@@ -205,7 +205,7 @@ export default function Analytics() {
             </div>
             {predChart ? (
               <>
-                <div className="h-64">
+                <div className="h-64 sm:h-[300px] mt-2 flex-1">
                   <Line data={predChart} options={{
                     ...chartDefaults,
                     plugins: {
@@ -241,11 +241,11 @@ export default function Analytics() {
           </motion.div>
 
           <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.25}}
-            className="glass rounded-2xl p-6">
+            className="lg:col-span-4 glass rounded-2xl p-6 flex flex-col">
             <h3 className="text-white font-bold mb-1">Category Breakdown</h3>
             <p className="text-gray-400 text-xs mb-4">Emission sources this month</p>
             {catChart ? (
-              <div className="h-52">
+              <div className="h-64 sm:h-[300px] mt-2 flex-1 relative flex items-center justify-center">
                 <Doughnut data={catChart} options={{
                   ...chartDefaults,
                   plugins: {
@@ -277,7 +277,7 @@ export default function Analytics() {
               <span className="text-xs text-gray-500">Last 4 weeks</span>
             </div>
             {weeklyChart ? (
-              <div className="h-52">
+              <div className="h-64 mt-2">
                 <Bar data={weeklyChart} options={chartDefaults}/>
               </div>
             ) : (
@@ -305,7 +305,7 @@ export default function Analytics() {
               )}
             </div>
             {forecastChart ? (
-              <div className="h-52">
+              <div className="h-64 mt-2">
                 <Bar data={forecastChart} options={chartDefaults}/>
               </div>
             ) : (

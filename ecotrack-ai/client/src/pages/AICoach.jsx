@@ -64,8 +64,8 @@ export default function AICoach() {
 
   return (
     <div className="pt-16 min-h-screen dashboard-bg">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
           <h1 className="text-2xl font-black text-white mb-1 flex items-center gap-2"><Zap className="w-6 h-6 text-emerald-400"/>AI Sustainability Coach</h1>
           <p className="text-gray-400 text-sm">Personalized guidance, predictions, and daily eco tips.</p>
         </div>
@@ -134,13 +134,13 @@ export default function AICoach() {
           <div className="space-y-6">
             {predictions ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                   {[
                     {label:'Annual Forecast',value:`${Math.round(predictions.current_annual_predicted).toLocaleString()} kg`,sub:'CO₂ this year',color:'text-white'},
                     {label:'Optimistic Scenario',value:`${Math.round(predictions.optimistic_annual).toLocaleString()} kg`,sub:'With lifestyle changes',color:'text-emerald-400'},
                     {label:'Potential Savings',value:`${Math.round(predictions.potential_annual_savings).toLocaleString()} kg`,sub:'Achievable reduction',color:'text-blue-400'},
                   ].map(s=>(
-                    <div key={s.label} className="glass rounded-2xl p-5">
+                    <div key={s.label} className="glass rounded-2xl p-6">
                       <p className="text-gray-400 text-xs mb-1">{s.label}</p>
                       <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
                       <p className="text-gray-500 text-xs">{s.sub}</p>
@@ -165,9 +165,9 @@ export default function AICoach() {
         )}
 
         {tab==='tips' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {tips.length>0 ? tips.map((tip,i)=>(
-              <motion.div key={i} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*.1}} className="glass rounded-2xl p-5 card-hover">
+              <motion.div key={i} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*.1}} className="glass rounded-2xl p-6 card-hover">
                 <div className="text-3xl mb-3">{tip.icon}</div>
                 <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{tip.category}</span>
                 <p className="text-gray-200 text-sm mt-3 leading-relaxed">{tip.tip}</p>
