@@ -170,9 +170,9 @@ export default function Landing() {
       </section>
 
       {/* ─── LOGOS SECTION ─── */}
-      <section className="py-10 border-b border-emerald-900/20 bg-white/[0.02]">
+      <section className="py-16 border-b border-emerald-900/20 bg-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xs text-gray-500 font-medium uppercase tracking-widest mb-6">Powered by Industry Leading Tech</p>
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-widest mb-10">Powered by Industry Leading Tech</p>
           <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
             {/* Generic placeholder tech text instead of complex SVG logos for simplicity */}
             <span className="text-xl font-bold font-mono">React 19</span>
@@ -187,7 +187,7 @@ export default function Landing() {
       {/* ─── AI COACH SECTION (Alternating Layout) ─── */}
       <section id="ai-coach" className="py-24 lg:py-32 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             
             {/* Image Side */}
             <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}
@@ -271,7 +271,7 @@ export default function Landing() {
             <p className="text-gray-400 max-w-2xl font-light">Everything you need to track, understand, and reduce your emissions.</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {features.map((f, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
                 className="bg-[#0a0f1a] border border-white/5 p-8 rounded-2xl hover:bg-white/[0.02] transition-colors group">
@@ -292,7 +292,7 @@ export default function Landing() {
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Stories from the Community</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((t, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
                 className="glass p-8 rounded-2xl border border-white/5">
