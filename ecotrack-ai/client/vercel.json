@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "ecotrack-ai",
+  "builds": [{ "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }],
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "env": {
+    "VITE_API_URL": "https://ecotrack-api.onrender.com/api/v1"
+  }
+}

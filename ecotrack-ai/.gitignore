@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+*.env.local
+
+# Node
+node_modules/
+client/dist/
+client/.vite/
+*.log
+npm-debug.log*
+
+# Environment files — keep .env templates but not real secrets
+# Uncomment below if you want to exclude .env entirely:
+# .env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
