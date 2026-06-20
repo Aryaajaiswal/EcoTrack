@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Car, Home, Leaf, ShoppingBag, Recycle, ChevronRight, ChevronLeft, CheckCircle, Zap, BarChart2 } from 'lucide-react'
+import { Car, Home, Leaf, ShoppingBag, Recycle, ChevronRight, ChevronLeft, CheckCircle, Zap, BarChart2, Bike, Train, Bus, CookingPot } from 'lucide-react'
 import { carbonAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -14,9 +14,9 @@ const STEPS = ['Transportation','Home Energy','Food','Shopping','Lifestyle']
 const STEP_ICONS = [Car, Home, Leaf, ShoppingBag, Recycle]
 
 const defaultForm = {
-  transportation: { car_km_per_week:100, car_type:'petrol', bike_km_per_week:0, public_transport_km_per_week:20, flights_per_year:2, flight_type:'domestic' },
-  home_energy: { electricity_kwh_per_month:250, renewable_energy_percent:0, ac_hours_per_day:4, num_people_in_home:2 },
-  food: { diet_type:'omnivore', dairy_servings_per_week:7, food_waste_level:'medium' },
+  transportation: { car_km_per_week:50, car_type:'petrol', bike_km_per_week:10, motorcycle_km_per_week:30, auto_km_per_week:15, metro_km_per_week:20, bus_km_per_week:10, public_transport_km_per_week:0, flights_per_year:1, flight_type:'domestic' },
+  home_energy: { electricity_kwh_per_month:200, renewable_energy_percent:0, ac_hours_per_day:6, num_people_in_home:4, lpg_cylinders_per_month:1 },
+  food: { diet_type:'vegetarian', dairy_servings_per_week:10, food_waste_level:'medium', rice_meals_per_week:10 },
   shopping: { clothing_items_per_month:2, online_orders_per_month:4, plastic_usage:'medium', buys_secondhand:false },
   lifestyle: { water_liters_per_day:150, recycling_habit:'sometimes', waste_kg_per_week:5, uses_renewable_energy:false },
 }
@@ -78,8 +78,11 @@ export default function Calculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Num label="Car travel" unit="km/week" value={form.transportation.car_km_per_week} onChange={v=>upd('transportation','car_km_per_week',v)}/>
           <Sel label="Car type" value={form.transportation.car_type} onChange={v=>upd('transportation','car_type',v)}
-            options={[{value:'petrol',label:'Petrol/Gasoline'},{value:'diesel',label:'Diesel'},{value:'electric',label:'Electric'},{value:'hybrid',label:'Hybrid'}]}/>
-          <Num label="Public transport" unit="km/week" value={form.transportation.public_transport_km_per_week} onChange={v=>upd('transportation','public_transport_km_per_week',v)}/>
+            options={[{value:'petrol',label:'Petrol'},{value:'diesel',label:'Diesel'},{value:'cng',label:'CNG'},{value:'electric',label:'Electric'},{value:'hybrid',label:'Hybrid'}]}/>
+          <Num label="Motorcycle/Scooter" unit="km/week" value={form.transportation.motorcycle_km_per_week} onChange={v=>upd('transportation','motorcycle_km_per_week',v)}/>
+          <Num label="Auto-rickshaw" unit="km/week" value={form.transportation.auto_km_per_week} onChange={v=>upd('transportation','auto_km_per_week',v)}/>
+          <Num label="Metro" unit="km/week" value={form.transportation.metro_km_per_week} onChange={v=>upd('transportation','metro_km_per_week',v)}/>
+          <Num label="Bus" unit="km/week" value={form.transportation.bus_km_per_week} onChange={v=>upd('transportation','bus_km_per_week',v)}/>
           <Num label="Cycling/Walking" unit="km/week" value={form.transportation.bike_km_per_week} onChange={v=>upd('transportation','bike_km_per_week',v)}/>
           <Num label="Flights per year" value={form.transportation.flights_per_year} onChange={v=>upd('transportation','flights_per_year',v)}/>
           <Sel label="Flight type" value={form.transportation.flight_type} onChange={v=>upd('transportation','flight_type',v)}
@@ -91,14 +94,16 @@ export default function Calculator() {
           <Num label="Monthly electricity" unit="kWh" value={form.home_energy.electricity_kwh_per_month} onChange={v=>upd('home_energy','electricity_kwh_per_month',v)}/>
           <Num label="Renewable energy" unit="%" max={100} value={form.home_energy.renewable_energy_percent} onChange={v=>upd('home_energy','renewable_energy_percent',v)}/>
           <Num label="AC usage" unit="hrs/day" max={24} step={0.5} value={form.home_energy.ac_hours_per_day} onChange={v=>upd('home_energy','ac_hours_per_day',v)}/>
+          <Num label="LPG cylinders" unit="per month" step={0.5} value={form.home_energy.lpg_cylinders_per_month} onChange={v=>upd('home_energy','lpg_cylinders_per_month',v)}/>
           <Num label="People in home" min={1} max={20} value={form.home_energy.num_people_in_home} onChange={v=>upd('home_energy','num_people_in_home',v)}/>
         </div>
       )
       case 2: return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Sel label="Diet type" value={form.food.diet_type} onChange={v=>upd('food','diet_type',v)}
-            options={[{value:'vegan',label:'🌱 Vegan'},{value:'vegetarian',label:'🥦 Vegetarian'},{value:'omnivore',label:'🍽️ Omnivore'},{value:'heavy_meat',label:'🥩 Heavy Meat Eater'}]}/>
+            options={[{value:'vegan',label:'🌱 Vegan (Sattvic)'},{value:'vegetarian',label:'🥦 Vegetarian (Indian)'},{value:'eggetarian',label:'🥚 Eggetarian'},{value:'omnivore',label:'🍽️ Non-veg (occasional)'},{value:'heavy_meat',label:'🥩 Non-veg (daily)'}]}/>
           <Num label="Dairy servings" unit="per week" max={30} step={0.5} value={form.food.dairy_servings_per_week} onChange={v=>upd('food','dairy_servings_per_week',v)}/>
+          <Num label="Rice meals" unit="per week" max={21} value={form.food.rice_meals_per_week} onChange={v=>upd('food','rice_meals_per_week',v)}/>
           <div className="sm:col-span-2">
             <Sel label="Food waste level" value={form.food.food_waste_level} onChange={v=>upd('food','food_waste_level',v)}
               options={[{value:'low',label:'✅ Low — Barely waste food'},{value:'medium',label:'🔶 Medium — Some waste'},{value:'high',label:'❌ High — Waste a lot'}]}/>
@@ -110,7 +115,7 @@ export default function Calculator() {
           <Num label="New clothing items" unit="per month" value={form.shopping.clothing_items_per_month} onChange={v=>upd('shopping','clothing_items_per_month',v)}/>
           <Num label="Online orders" unit="per month" value={form.shopping.online_orders_per_month} onChange={v=>upd('shopping','online_orders_per_month',v)}/>
           <Sel label="Plastic usage" value={form.shopping.plastic_usage} onChange={v=>upd('shopping','plastic_usage',v)}
-            options={[{value:'low',label:'✅ Low — Reusable'},{value:'medium',label:'🔶 Medium — Mixed'},{value:'high',label:'❌ High — Lots of single-use'}]}/>
+            options={[{value:'low',label:'✅ Low — Reusable bags/bottles'},{value:'medium',label:'🔶 Medium — Mixed usage'},{value:'high',label:'❌ High — Lots of single-use'}]}/>
           <Toggle label="Buy secondhand clothing?" value={form.shopping.buys_secondhand} onChange={v=>upd('shopping','buys_secondhand',v)}/>
         </div>
       )
@@ -120,7 +125,7 @@ export default function Calculator() {
           <Num label="Weekly waste" unit="kg" step={0.5} value={form.lifestyle.waste_kg_per_week} onChange={v=>upd('lifestyle','waste_kg_per_week',v)}/>
           <div className="sm:col-span-2">
             <Sel label="Recycling habit" value={form.lifestyle.recycling_habit} onChange={v=>upd('lifestyle','recycling_habit',v)}
-              options={[{value:'always',label:'✅ Always — Dedicated recycler'},{value:'sometimes',label:'🔶 Sometimes — When convenient'},{value:'never',label:'❌ Never — I don\'t recycle'}]}/>
+              options={[{value:'always',label:'✅ Always — Segregate & recycle'},{value:'sometimes',label:'🔶 Sometimes — When convenient'},{value:'never',label:'❌ Never — Don\'t recycle'}]}/>
           </div>
         </div>
       )
@@ -146,7 +151,7 @@ export default function Calculator() {
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div><p className="text-2xl font-black text-white">{formatCO2(result.total_co2_kg_per_year)}</p><p className="text-gray-400 text-xs">per year</p></div>
                   <div><p className="text-2xl font-black text-white">{formatCO2(result.monthly_co2_kg)}</p><p className="text-gray-400 text-xs">per month</p></div>
-                  <div><p className="text-2xl font-black text-emerald-400">{result.percentile_better_than}%</p><p className="text-gray-400 text-xs">better than global avg</p></div>
+                  <div><p className="text-2xl font-black text-emerald-400">{result.percentile_better_than}%</p><p className="text-gray-400 text-xs">better than India avg</p></div>
                 </div>
               </div>
             </div>
@@ -159,11 +164,12 @@ export default function Calculator() {
                 </div>
               </div>
               <div className="glass rounded-2xl p-6 sm:p-8">
-                <h3 className="text-white font-bold mb-4">vs Global Averages</h3>
+                <h3 className="text-white font-bold mb-4">vs Indian Averages</h3>
                 <div className="h-48">
-                  <Bar data={{labels:['You','Global Avg','US Avg'],datasets:[{data:[result.total_co2_kg_per_year,4700,15000],backgroundColor:['rgba(16,185,129,.6)','rgba(251,191,36,.6)','rgba(239,68,68,.6)'],borderColor:['#10b981','#fbbf24','#ef4444'],borderWidth:2,borderRadius:6}]}}
+                  <Bar data={{labels:['You','India Avg','Global Avg'],datasets:[{data:[result.total_co2_kg_per_year,1400,4700],backgroundColor:['rgba(16,185,129,.6)','rgba(251,191,36,.6)','rgba(239,68,68,.6)'],borderColor:['#10b981','#fbbf24','#ef4444'],borderWidth:2,borderRadius:6}]}}
                     options={{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7280'},grid:{color:'#1f2937'}},y:{ticks:{color:'#6b7280'},grid:{color:'#1f2937'}}}}}/>
                 </div>
+                <p className="text-gray-500 text-xs text-center mt-2">India avg: 1,400 kg/person • Global avg: 4,700 kg/person</p>
               </div>
             </div>
             <div className="glass rounded-2xl p-6 sm:p-8">
@@ -199,8 +205,8 @@ export default function Calculator() {
       <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="w-full">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-black text-white mb-2">Carbon Footprint Calculator</h1>
-            <p className="text-gray-400 text-sm">5 sections to get your precise carbon score</p>
+            <h1 className="text-2xl font-black text-white mb-2">Carbon Footprint Calculator 🇮🇳</h1>
+            <p className="text-gray-400 text-sm">Designed for Indian households — 5 sections to get your precise carbon score</p>
           </div>
           <div className="flex items-center justify-between mb-8">
             {STEPS.map((s,i)=>{const Icon=STEP_ICONS[i]; return (

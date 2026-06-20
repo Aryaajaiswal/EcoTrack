@@ -1,34 +1,48 @@
-"""Carbon footprint calculation service using IPCC/EPA emission factors."""
+"""Carbon footprint calculation service — India-specific emission factors & measures."""
 from app.models.carbon import CarbonCalculationInput, CarbonCalculationResult, CategoryBreakdown
 from typing import List
 
-TRANSPORT_FACTORS = {"petrol": 0.21, "diesel": 0.17, "electric": 0.05, "hybrid": 0.10}
-FLIGHT_FACTORS = {"domestic": 255, "international": 990}
-FOOD_FACTORS = {"vegan": 1500, "vegetarian": 1700, "omnivore": 2500, "heavy_meat": 3300}
+# India-specific emission factors
+TRANSPORT_FACTORS = {"petrol": 0.19, "diesel": 0.15, "electric": 0.04, "hybrid": 0.09, "cng": 0.12}
+MOTORCYCLE_FACTOR = 0.035
+AUTO_FACTOR = 0.055
+METRO_FACTOR = 0.015
+BUS_FACTOR = 0.075
+FLIGHT_FACTORS = {"domestic": 180, "international": 720}
+FOOD_FACTORS = {"vegan": 1200, "vegetarian": 1400, "eggetarian": 1550, "omnivore": 2100, "heavy_meat": 2800}
 PLASTIC_FACTORS = {"low": 30, "medium": 80, "high": 160}
 RECYCLING_FACTORS = {"always": 0.5, "sometimes": 0.8, "never": 1.0}
+INDIAN_GRID_FACTOR = 0.82  # kg CO2/kWh (vs 0.475 global average)
+LPG_FACTOR = 1.5  # kg CO2 per LPG cylinder usage per month
+INDIAN_AVERAGE_KG = 1400  # India per capita annual CO2 (~1.4 tonnes)
 GLOBAL_AVERAGE_KG = 4700
 
 
 def calculate_transportation_emissions(d) -> float:
-    car = d.car_km_per_week * 52 * TRANSPORT_FACTORS.get(d.car_type, 0.21)
+    car = d.car_km_per_week * 52 * TRANSPORT_FACTORS.get(d.car_type, 0.19)
+    motorcycle = d.motorcycle_km_per_week * 52 * MOTORCYCLE_FACTOR
+    auto = d.auto_km_per_week * 52 * AUTO_FACTOR
+    metro = d.metro_km_per_week * 52 * METRO_FACTOR
+    bus = d.bus_km_per_week * 52 * BUS_FACTOR
     public = d.public_transport_km_per_week * 52 * 0.089
-    flights = d.flights_per_year * FLIGHT_FACTORS.get(d.flight_type, 255)
-    return car + public + flights
+    flights = d.flights_per_year * FLIGHT_FACTORS.get(d.flight_type, 180)
+    return car + motorcycle + auto + metro + bus + public + flights
 
 
 def calculate_home_energy_emissions(d) -> float:
     renewable_factor = 1 - (d.renewable_energy_percent / 100) * 0.85
-    electricity = d.electricity_kwh_per_month * 12 * 0.475 * renewable_factor
-    ac = d.ac_hours_per_day * 365 * 1.5 * 0.475
-    return (electricity + ac) / max(d.num_people_in_home, 1)
+    electricity = d.electricity_kwh_per_month * 12 * INDIAN_GRID_FACTOR * renewable_factor
+    ac = d.ac_hours_per_day * 365 * 1.5 * INDIAN_GRID_FACTOR
+    lpg = d.lpg_cylinders_per_month * 12 * LPG_FACTOR
+    return (electricity + ac + lpg) / max(d.num_people_in_home, 1)
 
 
 def calculate_food_emissions(d) -> float:
-    base = FOOD_FACTORS.get(d.diet_type, 2500)
+    base = FOOD_FACTORS.get(d.diet_type, 1400)
     dairy = d.dairy_servings_per_week * 52 * 3.2
+    rice_mult = 1 + (d.rice_meals_per_week / 14) * 0.15  # rice has higher methane impact
     waste_mult = {"low": 1.0, "medium": 1.15, "high": 1.3}.get(d.food_waste_level, 1.15)
-    return (base + dairy) * waste_mult
+    return (base + dairy) * waste_mult * rice_mult
 
 
 def calculate_shopping_emissions(d) -> float:
@@ -45,7 +59,7 @@ def calculate_lifestyle_emissions(d) -> float:
 
 
 def calculate_sustainability_score(total: float) -> int:
-    ratio = total / GLOBAL_AVERAGE_KG
+    ratio = total / INDIAN_AVERAGE_KG
     if ratio <= 0.3: return 98
     if ratio <= 0.5: return 90
     if ratio <= 0.7: return 80
@@ -66,41 +80,53 @@ def get_eco_level(score: int) -> str:
 
 
 def get_percentile(total: float) -> float:
-    if total < 1000: return 95.0
-    if total < 2000: return 85.0
-    if total < 3000: return 75.0
-    if total < 5000: return 55.0
-    if total < 8000: return 35.0
-    if total < 12000: return 20.0
-    return 8.0
+    if total < 500: return 95.0
+    if total < 800: return 85.0
+    if total < 1100: return 70.0
+    if total < 1400: return 50.0
+    if total < 2000: return 30.0
+    if total < 3000: return 15.0
+    return 5.0
 
 
 def generate_recommendations(data: CarbonCalculationInput, bd: CategoryBreakdown) -> List[str]:
     recs = []
-    if bd.transportation > 2000:
-        if data.transportation.car_km_per_week > 100:
-            recs.append("🚗 Consider carpooling or switching to an EV — could reduce transport emissions by 40–60%.")
+    if bd.transportation > 1000:
+        if data.transportation.car_km_per_week > 80:
+            recs.append("🚗 Consider switching to CNG or electric — saves 30-50% on fuel emissions in Indian cities.")
+        if data.transportation.motorcycle_km_per_week > 50:
+            recs.append("🏍️ Try using metro or auto for shorter trips — motorcycles emit 3x more than metro per km.")
+        if data.transportation.auto_km_per_week > 30:
+            recs.append("🛺 Share autos via apps like Uber/Ola Auto to split emissions per passenger.")
         if data.transportation.flights_per_year > 2:
-            recs.append("✈️ Each long-haul flight adds ~990 kg CO₂. Consider train travel or video calls.")
-        if data.transportation.public_transport_km_per_week < 20:
-            recs.append("🚌 Using public transport twice a week could reduce your transport footprint by 18%.")
-    if data.home_energy.electricity_kwh_per_month > 300:
-        recs.append("💡 LED lighting and efficient appliances can cut home energy use by 25%.")
-    if data.home_energy.renewable_energy_percent < 30:
-        recs.append("☀️ Switching to a green energy tariff could save 1–2 tonnes of CO₂ annually.")
+            recs.append("✈️ Consider Shatabdi/Vande Bharat trains for inter-city travel — much lower emissions than flights.")
+        if data.transportation.metro_km_per_week < 20 and any([data.transportation.car_km_per_week > 30, data.transportation.motorcycle_km_per_week > 20]):
+            recs.append("🚇 India's metro network is expanding — using metro 3x a week can cut commute emissions by 60%.")
+    if data.home_energy.electricity_kwh_per_month > 250:
+        recs.append("💡 Switch to 5-star BEE rated appliances and LED lights — can cut 30% of home electricity use.")
+    if data.home_energy.ac_hours_per_day > 6:
+        recs.append("❄️ Set AC to 24°C instead of 18°C — saves ~20% electricity per degree in Indian climate.")
+    if data.home_energy.lpg_cylinders_per_month > 1:
+        recs.append("🔥 Switch to an induction cooktop for some meals — reduces LPG usage and saves money long-term.")
+    if data.home_energy.renewable_energy_percent < 20:
+        recs.append("☀️ Rooftop solar is cheaper than ever in India — a 1kW system saves ~1.2 tonnes CO₂/year.")
     if data.food.diet_type in ["omnivore", "heavy_meat"]:
-        recs.append("🥦 Going plant-based 3 days/week could reduce food emissions by 30%.")
+        recs.append("🥦 Going vegetarian even 3 days a week can reduce your food footprint by 25% — common in Indian households.")
+    if data.food.rice_meals_per_week > 10:
+        recs.append("🍚 Rice has high methane impact. Try mixing in millets (jowar/bajra) — healthier and lower emissions.")
     if data.food.food_waste_level == "high":
-        recs.append("🍽️ Reducing food waste by meal planning could save ~0.5 tonnes CO₂/year.")
+        recs.append("🍽️ Indian households waste ~50 kg food/year. Meal planning and composting can save both emissions and money.")
     if data.shopping.plastic_usage in ["medium", "high"]:
-        recs.append("♻️ Reusable bags and bottles eliminate ~80 kg of plastic-related CO₂ annually.")
+        recs.append("♻️ India banned many single-use plastics in 2022. Use cloth bags and steel bottles — saves ~80 kg CO₂/year.")
     if not data.shopping.buys_secondhand and data.shopping.clothing_items_per_month > 3:
-        recs.append("👕 Buying secondhand clothing cuts fashion emissions by up to 70% per item.")
+        recs.append("👕 Try local thrift stores or apps like Floh/CoutLoot — cuts fashion emissions by 70%.")
     if data.lifestyle.recycling_habit != "always":
-        recs.append("♻️ Consistent recycling can reduce your waste emissions by 50%.")
+        recs.append("♻️ Segregate waste at home — Indian cities with good recycling cut landfill emissions by half.")
+    if data.lifestyle.water_liters_per_day > 200:
+        recs.append("💧 Fix leaking taps and use bucket instead of shower — saves water & the energy to treat it.")
     if len(recs) < 3:
-        recs.append("🌳 Planting trees and supporting reforestation offsets remaining emissions.")
-        recs.append("📱 Log daily habits in EcoTrack AI to unlock streak bonuses!")
+        recs.append("🌳 Plant a tree or support urban forestry initiatives — 1 tree absorbs ~20 kg CO₂/year.")
+        recs.append("📱 Log daily habits in EcoTrack AI to track your progress and earn badges!")
     return recs[:6]
 
 
