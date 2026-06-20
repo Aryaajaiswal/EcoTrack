@@ -279,5 +279,6 @@ MIT License — free to use, modify, and distribute.
 PRs welcome! Please read our contributing guidelines and code of conduct.
 
 ---
+<img width="1920" height="8209" alt="image" src="https://github.com/user-attachments/assets/b2259b86-6db5-4121-9794-3bcfcf74a8b4" />
 
 *Built with 💚 for a greener future. EcoTrack AI — © 2026*
