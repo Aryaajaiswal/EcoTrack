@@ -30,6 +30,11 @@
 | 👤 **Profile System** | Customizable profiles with stats, badges, and level progress |
 | 🔐 **JWT Auth** | Secure registration, login, password hashing with bcrypt |
 | 📊 **Analytics Dashboard** | Interactive charts for daily/weekly emissions and category breakdowns |
+| 👥 **Social/Friends** | Add friends, send/accept requests, compete together |
+| 🔔 **Notifications** | Real-time in-app notifications for badges, challenges, streaks, friend requests |
+| 📧 **Email Verification** | Verify email, forgot/reset password flow |
+| 🛡️ **Admin Dashboard** | Platform analytics, user management, moderation tools |
+| 📥 **Data Export** | Download carbon data as CSV or profile as JSON |
 
 ---
 
@@ -70,6 +75,7 @@
 │   ├── src/
 │   │   ├── components/         # Reusable UI components
 │   │   │   ├── Navbar.jsx
+│   │   │   ├── NotificationBell.jsx
 │   │   │   ├── ProtectedRoute.jsx
 │   │   │   ├── ParticleBackground.jsx
 │   │   │   └── LoadingSkeleton.jsx
@@ -77,13 +83,18 @@
 │   │   │   ├── Landing.jsx     # Marketing page
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
+│   │   │   ├── ForgotPassword.jsx
+│   │   │   ├── ResetPassword.jsx
+│   │   │   ├── VerifyEmail.jsx
 │   │   │   ├── Dashboard.jsx   # Main dashboard
 │   │   │   ├── Calculator.jsx  # Carbon calculator
 │   │   │   ├── AICoach.jsx     # AI chatbot + predictions
 │   │   │   ├── Analytics.jsx   # Advanced analytics
 │   │   │   ├── Challenges.jsx  # Eco challenges
+│   │   │   ├── Social.jsx      # Friends & social
 │   │   │   ├── Leaderboard.jsx # Global rankings
-│   │   │   └── Profile.jsx     # User profile
+│   │   │   ├── Profile.jsx     # User profile
+│   │   │   └── AdminDashboard.jsx # Admin panel
 │   │   ├── context/            # React context
 │   │   │   └── AuthContext.jsx
 │   │   ├── hooks/              # Custom hooks
@@ -199,6 +210,10 @@ VITE_API_URL=http://localhost:8000/api/v1
 |--------|----------|-------------|
 | `POST` | `/api/v1/auth/register` | Register new user |
 | `POST` | `/api/v1/auth/login` | Login and get JWT |
+| `GET` | `/api/v1/auth/verify-email` | Verify email with token |
+| `POST` | `/api/v1/auth/resend-verification` | Resend verification email |
+| `POST` | `/api/v1/auth/forgot-password` | Request password reset |
+| `POST` | `/api/v1/auth/reset-password` | Reset password with token |
 | `GET` | `/api/v1/users/me` | Get current user profile |
 | `PUT` | `/api/v1/users/me` | Update user profile |
 | `GET` | `/api/v1/users/stats` | Get detailed user statistics |
@@ -215,6 +230,22 @@ VITE_API_URL=http://localhost:8000/api/v1
 | `POST` | `/api/v1/challenges/join` | Join a challenge |
 | `POST` | `/api/v1/challenges/complete` | Complete a challenge |
 | `GET` | `/api/v1/leaderboard/` | Get global leaderboard |
+| `GET` | `/api/v1/notifications/` | List notifications |
+| `GET` | `/api/v1/notifications/unread-count` | Get unread count |
+| `POST` | `/api/v1/notifications/{id}/read` | Mark notification read |
+| `POST` | `/api/v1/notifications/read-all` | Mark all notifications read |
+| `POST` | `/api/v1/friends/request` | Send friend request |
+| `POST` | `/api/v1/friends/respond/{id}` | Accept/reject friend request |
+| `GET` | `/api/v1/friends/` | List friends |
+| `GET` | `/api/v1/friends/requests` | List pending requests |
+| `DELETE` | `/api/v1/friends/{id}` | Remove friend |
+| `GET` | `/api/v1/friends/search` | Search users by name/email |
+| `GET` | `/api/v1/admin/users` | List all users (admin) |
+| `GET` | `/api/v1/admin/stats` | Platform stats (admin) |
+| `PUT` | `/api/v1/admin/users/{id}` | Update user (admin) |
+| `DELETE` | `/api/v1/admin/users/{id}` | Delete user (admin) |
+| `GET` | `/api/v1/export/carbon-data` | Download carbon data as CSV |
+| `GET` | `/api/v1/export/profile` | Download profile as JSON |
 
 Full interactive docs available at `/docs` (Swagger UI) when backend is running.
 
